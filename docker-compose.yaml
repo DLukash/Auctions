@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+
+  #########################
+  # DATABASE
+  #########################
+  
+  postgres:
+    image: postgres
+    restart: always
+    container_name: postgres
+    logging:
+      driver: "json-file"
+      options:
+          max-file: "5"
+          max-size: "10m"
+    ports:
+      - 5433:5432
+    volumes:
+      - ./volumes/postgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=auction
+      - POSTGRES_PASSWORD=auction
+      - POSTGRES_DB=auction_db
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "auction_db", "-U", "auction" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
