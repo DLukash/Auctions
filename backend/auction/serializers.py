@@ -5,12 +5,16 @@ from auction.models import Auction, Region, Bid
 class AuctionSerializer(serializers.ModelSerializer):
 
     """ Auction model class serializer"""
+
+    current_price = serializers.SerializerMethodField()
     
     class Meta:
         model = Auction
         fields = '__all__'
         extra_kwargs = {'author': {'required': False}} 
 
+    def get_current_price(self, obj):
+        return obj.current_price
 
 class RegionSerializer(serializers.ModelSerializer):
 

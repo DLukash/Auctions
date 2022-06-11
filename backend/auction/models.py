@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.validators import MinValueValidator
 from rest_framework.serializers import ValidationError
-from rest_framework import status
+from django.core.validators import RegexValidator
 
 # Create your models here.
 
@@ -62,7 +62,10 @@ class Auction(models.Model):
     """ ORM model to hold auctions """
 
     photo = models.ImageField(blank=True)
-    cadnumber = models.CharField(max_length=23)
+    cadnumber = models.CharField(max_length=23, validators=[RegexValidator(
+            regex=r'\d{10}:\d{2}:\d{3}:\d{4}',
+            message='The cadaster number should be the 0000000000:00:000:0000 format'
+        )])
     size = models.FloatField()
     duration = models.IntegerField(validators=[MinValueValidator(1)])             #How long, in hours, auction should last
     #current_price = models.FloatField(default=0.0)
@@ -76,7 +79,7 @@ class Auction(models.Model):
         Return the last bid acording to bid_time.
         Return None if there is no such bid
         """
-        if self.bid_set:
+        if self.bid_set.exists():
             return self.bid_set.latest('bid_time')
         else:
             return None
@@ -87,7 +90,7 @@ class Auction(models.Model):
         Return the last price acording to bid was made
         Return 0.0 if there are no bids at all
         """
-        if self.bid_set:
+        if self.bid_set.exists():
             return self.bid_set.latest('bid_time').price
         else:
             return 0.0

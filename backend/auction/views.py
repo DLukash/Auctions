@@ -2,6 +2,8 @@
 #Django & DRF
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
+from django_filters import rest_framework as filters
+from django.db.models import Max, Min
 
 #Models
 from auction.models import Auction, Region, Bid
@@ -11,6 +13,9 @@ from auction.serializers import AuctionSerializer, RegionSerializer, BidSerializ
 
 #Custome permition
 from auction.permitions import IsAuthor, PermissionPolicyMixin, LessThenFiveMinPass
+
+#Custom filter
+from auction.filters import AuctionFilter
 
 
 class AuctionViewSet(PermissionPolicyMixin,
@@ -28,11 +33,12 @@ class AuctionViewSet(PermissionPolicyMixin,
     - View as entity (GET wiht <int:pk>)
     - Modifying (PATCH with <int:pk>)
     - Deleting (DELETE with wiht <int:pk>)
-    
     """
     
     serializer_class = AuctionSerializer
     queryset = Auction.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = AuctionFilter
 
     # TODO Change CREATE method store current user as an author
     permission_classes = [IsAuthenticated]
@@ -48,6 +54,22 @@ class AuctionViewSet(PermissionPolicyMixin,
         Store authorised user as an author of the auction
         """
         serializer.save(author = self.request.user)
+    
+    
+    def get_queryset(self):
+        query_set = super().get_queryset()
+
+        """
+        Implementing aditional filtering depends on the last bid
+        """
+
+        if 'min_price' in self.request.GET:
+            query_set = query_set.annotate(current_price=Max('bid__price')).filter(current_price__gt = self.request.GET['min_price'])
+
+        if 'max_price' in self.request.GET:
+            query_set = query_set.annotate(current_price=Max('bid__price')).filter(current_price__lt = self.request.GET['max_price'])
+       
+        return query_set
 
 
 class RegionViewSet(mixins.CreateModelMixin,
@@ -70,7 +92,6 @@ class BidViewSet(PermissionPolicyMixin,
                 mixins.CreateModelMixin,
                 mixins.ListModelMixin,
                 mixins.RetrieveModelMixin,
-                mixins.UpdateModelMixin,
                 viewsets.GenericViewSet):
 
     """
@@ -94,4 +115,3 @@ class BidViewSet(PermissionPolicyMixin,
         """
         serializer.save(author = self.request.user)
 
-    
