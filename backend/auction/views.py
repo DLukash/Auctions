@@ -3,7 +3,7 @@
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 from django_filters import rest_framework as filters
-from django.db.models import Max, Min
+from django.db.models import Max
 
 #Models
 from auction.models import Auction, Region, Bid
@@ -64,10 +64,10 @@ class AuctionViewSet(PermissionPolicyMixin,
         """
 
         if 'min_price' in self.request.GET:
-            query_set = query_set.annotate(current_price=Max('bid__price')).filter(current_price__gt = self.request.GET['min_price'])
+            query_set = query_set.annotate(c_price=Max('bid__price')).filter(c_price__gt = self.request.GET['min_price'])
 
         if 'max_price' in self.request.GET:
-            query_set = query_set.annotate(current_price=Max('bid__price')).filter(current_price__lt = self.request.GET['max_price'])
+            query_set = query_set.annotate(c_price=Max('bid__price')).filter(c_price__lt = self.request.GET['max_price'])
        
         return query_set
 
