@@ -1,5 +1,6 @@
 from datetime import datetime
 
+#Django & DRF imports
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -7,7 +8,7 @@ from django.core.validators import MinValueValidator
 from rest_framework.serializers import ValidationError
 from django.core.validators import RegexValidator
 
-# Create your models here.
+
 
 class UserManager(BaseUserManager):
     """ Model manager to handle custom User model"""
@@ -39,14 +40,16 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
-    """ Custom ORM model for user"""
+    """ 
+    Custom ORM model for user
+    Username omited
+    E-mail uses as username instead
+    """
 
     username = None
     email = models.EmailField(unique=True)
     avatar = models.ImageField()
-
     objects = UserManager()
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -64,12 +67,11 @@ class Auction(models.Model):
     photo = models.ImageField(blank=True)
     cadnumber = models.CharField(max_length=23, validators=[RegexValidator(
             regex=r'\d{10}:\d{2}:\d{3}:\d{4}',
-            message='The cadaster number should be the 0000000000:00:000:0000 format'
+            message='The cadaster number should be in 0000000000:00:000:0000 format'
         )])
     size = models.FloatField()
-    duration = models.IntegerField(validators=[MinValueValidator(1)])             #How long, in hours, auction should last
-    #current_price = models.FloatField(default=0.0)
-    
+    duration = models.IntegerField(validators=[MinValueValidator(1)])
+    #current_price = models.FloatField(default=0.0)                     #Repalsed by method
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -99,14 +101,12 @@ class Auction(models.Model):
 class Bid(models.Model):
     """ ORM model to hold bids"""
 
-    #previous_bid = models.ForeignKey('self', on_delete=models.DO_NOTHING)
+    #previous_bid = models.ForeignKey('self', on_delete=models.DO_NOTHING) # Repalsed by method
     previous_bid = models.OneToOneField('self', on_delete=models.DO_NOTHING, blank=True, null=True, primary_key=False)
     price = models.FloatField(validators=[MinValueValidator(0)])
     bid_time = models.DateTimeField(default=datetime.now, editable=False)
-
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-
 
     def clean(self) -> None:
         
@@ -138,7 +138,7 @@ class Bid(models.Model):
     def delete(self, using=None, keep_parents=False):
 
         """
-        In case of bid is deleting change all forward bids if there was some
+        In case of bid is deleting change all forward bids if there are any
         """
         later_bids = self.auction.bid_set.filter(bid_time__gte = self.bid_time).order_by('bid_time')
         previous_bid = self.previous_bid

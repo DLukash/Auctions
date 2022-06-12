@@ -27,3 +27,50 @@ services:
       timeout: 45s
       interval: 10s
       retries: 10
+
+#########################
+# Django app
+#########################
+  
+  backend:
+    build: ./backend/
+    restart: always
+    container_name: backend
+    logging:
+      driver: "json-file"
+      options:
+          max-file: "5"
+          max-size: "10m"
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=postgres
+      - DB_DATABASE=auction_db
+      - DB_USER=auction
+      - DB_PASSWORD=auction
+      - DB_PORT=5432
+      - SECRET_KEY=django-insecure-@mgpeb(_x&w_v!mlbr3m$$kcyg%l_=al%$$!0bs(+m#$$k6j_3ym-
+      - FILE_STORAGE=local
+      #- AWS_S3_ACCESS_KEY_ID=''
+      #- AWS_S3_SECRET_ACCESS_KEY=''
+    networks:
+      - backend_network
+    depends_on:
+      - postgres
+
+#########################
+# Nginx
+#########################
+
+  nginx:
+    build: ./nginx/
+    restart: always
+    container_name: nginx
+    ports:
+      - 80:80
+    networks:
+      - backend_network  
+
+networks:
+  backend_network:
+    driver: bridge
