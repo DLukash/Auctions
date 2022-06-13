@@ -27,6 +27,8 @@ services:
       timeout: 45s
       interval: 10s
       retries: 10
+    networks:
+      - backend_network
 
 #########################
 # Django app
