@@ -95,9 +95,9 @@ WSGI_APPLICATION = 'auction_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DB_DATABASE'), 
-        'USER': os.getenv('DB_USER'), 
-        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'NAME': os.getenv('POSTGRES_DB'), 
+        'USER': os.getenv('POSTGRES_USER'), 
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'), 
         'PORT': os.getenv('DB_PORT'),
     }
@@ -144,8 +144,9 @@ if os.getenv('FILE_STORAGE') == 'S3':
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 else:
-    STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATIC_URL = 'static/'
 
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, "static"),

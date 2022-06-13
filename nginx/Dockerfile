@@ -1,3 +1,4 @@
-FROM nginx
+FROM nginx as base
 
-COPY ./default.conf  /etc/nginx/conf.d/default.conf
+FROM base as prod
+COPY ../volumes/nginx/default.conf /etc/nginx/conf.d/default.conf

@@ -1,6 +1,6 @@
 
 #Django & DRF
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from django_filters import rest_framework as filters
 from django.db.models import Max
@@ -18,14 +18,7 @@ from auction.permitions import IsAuthor, PermissionPolicyMixin, LessThenFiveMinP
 from auction.filters import AuctionFilter
 
 
-class AuctionViewSet(PermissionPolicyMixin,
-                mixins.CreateModelMixin,
-                mixins.ListModelMixin,
-                mixins.DestroyModelMixin,
-                mixins.UpdateModelMixin,
-                mixins.RetrieveModelMixin,
-                viewsets.GenericViewSet):
-
+class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
     """ 
     ViewSet of actions for Auction class:
     - Creating (POST)
@@ -72,11 +65,7 @@ class AuctionViewSet(PermissionPolicyMixin,
         return query_set
 
 
-class RegionViewSet(mixins.CreateModelMixin,
-                mixins.ListModelMixin,
-                mixins.RetrieveModelMixin,
-                mixins.UpdateModelMixin,
-                viewsets.GenericViewSet):
+class RegionViewSet(viewsets.ModelViewSet):
 
     """
     ViewSet to handle CRUD for Region class
@@ -88,11 +77,7 @@ class RegionViewSet(mixins.CreateModelMixin,
     permission_classes = [IsAuthenticated]
     
 
-class BidViewSet(PermissionPolicyMixin,
-                mixins.CreateModelMixin,
-                mixins.ListModelMixin,
-                mixins.RetrieveModelMixin,
-                viewsets.GenericViewSet):
+class BidViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
 
     """
     ViewSet to handle CRUD for Bid class

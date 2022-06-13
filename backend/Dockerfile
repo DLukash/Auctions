@@ -6,14 +6,7 @@ FROM python:3.8.3
 WORKDIR /app
 COPY ./ ./
 
-EXPOSE 8000-8000
-
-
-ENTRYPOINT ["sh", "entrypoint.sh"]
-
-#RUN pip install -r requirements.txt
-#RUN python manage.py collectstatic
-
-#CMD [ "gunicorn", "auction_backend.wsgi"]
+RUN pip install -r requirements.txt
+RUN python manage.py collectstatic
 
 

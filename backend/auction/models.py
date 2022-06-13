@@ -140,12 +140,14 @@ class Bid(models.Model):
         """
         In case of bid is deleting change all forward bids if there are any
         """
-        later_bids = self.auction.bid_set.filter(bid_time__gte = self.bid_time).order_by('bid_time')
-        previous_bid = self.previous_bid
-        for bid in later_bids:
-            bid.previous_bid = previous_bid
-            previous_bid = bid
-            bid.save()
+        later_bid = self.auction.bid_set.filter(bid_time__gte = self.bid_time).order_by('bid_time').first()
+        later_bid.previous_bid = self.previous_bid
+        
+        # previous_bid = self.previous_bid
+        # for bid in later_bids:
+        #     bid.previous_bid = previous_bid
+        #     previous_bid = bid
+        #     bid.save()
 
         return super().delete(using, keep_parents)
 

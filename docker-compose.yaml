@@ -15,13 +15,10 @@ services:
           max-file: "5"
           max-size: "10m"
     ports:
-      - 5433:5432
+      - 5433:${DB_PORT}
     volumes:
       - ./volumes/postgresql:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=auction
-      - POSTGRES_PASSWORD=auction
-      - POSTGRES_DB=auction_db
+    env_file: .env
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "auction_db", "-U", "auction" ]
       timeout: 45s
@@ -38,23 +35,15 @@ services:
     build: ./backend/
     restart: always
     container_name: backend
+    command: gunicorn auction_backend.wsgi:application --bind 0.0.0.0:$APP_PORT
     logging:
       driver: "json-file"
       options:
           max-file: "5"
           max-size: "10m"
     ports:
-      - 8000:8000
-    environment:
-      - DB_HOST=postgres
-      - DB_DATABASE=auction_db
-      - DB_USER=auction
-      - DB_PASSWORD=auction
-      - DB_PORT=5432
-      - SECRET_KEY=django-insecure-@mgpeb(_x&w_v!mlbr3m$$kcyg%l_=al%$$!0bs(+m#$$k6j_3ym-
-      - FILE_STORAGE=local
-      #- AWS_S3_ACCESS_KEY_ID=''
-      #- AWS_S3_SECRET_ACCESS_KEY=''
+      - ${APP_PORT}:${APP_PORT}
+    env_file: .env
     networks:
       - backend_network
     depends_on:
@@ -65,11 +54,15 @@ services:
 #########################
 
   nginx:
-    build: ./nginx/
+    build:
+      context: ./nginx/
+      target: base
     restart: always
     container_name: nginx
     ports:
-      - 80:80
+      - ${SERVER_PORT}:${SERVER_PORT}
+    volumes:
+      - ./volumes/nginx/default.conf:/etc/nginx/conf.d/default.conf
     networks:
       - backend_network  
 
