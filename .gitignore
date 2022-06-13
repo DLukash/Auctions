@@ -1,4 +1,4 @@
-volumes/
+volumes/postgresql/*
 
 # Django #
 *.log
