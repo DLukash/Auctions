@@ -35,7 +35,7 @@ services:
     build: ./backend/
     restart: always
     container_name: backend
-    command: gunicorn auction_backend.wsgi:application --bind 0.0.0.0:$APP_PORT
+    command: gunicorn auction_backend.wsgi:application --bind 0.0.0.0:$APP_PORT --access-logfile -
     logging:
       driver: "json-file"
       options:

@@ -2,10 +2,11 @@
 #Django & DRF
 from django.urls import path
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
 
 #Views
 from auction.views import RegionViewSet, AuctionViewSet, BidViewSet
-
 
 
 #Auctions
@@ -30,3 +31,5 @@ urlpatterns +=[
                                         'delete':'destroy'}))
 ]
 
+#Staticfiles
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
