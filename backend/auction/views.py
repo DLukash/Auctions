@@ -15,7 +15,7 @@ from auction.serializers import AuctionSerializer, RegionSerializer, BidSerializ
 from auction.permitions import IsAuthor, PermissionPolicyMixin, LessThenFiveMinPass
 
 #Custom filter
-from auction.filters import AuctionFilter
+from auction.filters import AuctionFilter, BidFilter
 
 
 class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
@@ -85,6 +85,8 @@ class BidViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
     
     serializer_class = BidSerializer
     queryset = Bid.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = BidFilter
 
     permission_classes = [IsAuthenticated]
 
