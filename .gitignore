@@ -1,4 +1,5 @@
 volumes/postgresql/*
+volumes/staticfiles/*
 
 # Django #
 *.log

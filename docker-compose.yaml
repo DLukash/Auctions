@@ -35,12 +35,14 @@ services:
     build: ./backend/
     restart: always
     container_name: backend
-    command: gunicorn auction_backend.wsgi:application --bind 0.0.0.0:$APP_PORT --access-logfile -
+    command: bash -c "python /app/manage.py collectstatic --noinput && gunicorn auction_backend.wsgi:application --bind 0.0.0.0:$APP_PORT --access-logfile -"
     logging:
       driver: "json-file"
       options:
           max-file: "5"
           max-size: "10m"
+    volumes:
+      - ./volumes/staticfiles:/app/static
     ports:
       - ${APP_PORT}:${APP_PORT}
     env_file: .env
@@ -63,6 +65,7 @@ services:
       - ${SERVER_PORT}:${SERVER_PORT}
     volumes:
       - ./volumes/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./volumes/staticfiles:/static 
     networks:
       - backend_network  
 
