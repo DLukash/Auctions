@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import date, datetime
+from turtle import mode
 
 #Django & DRF imports
 from django.db import models
@@ -71,9 +72,11 @@ class Auction(models.Model):
         )])
     size = models.FloatField()
     duration = models.IntegerField(validators=[MinValueValidator(1)])
+    start_date = models.DateTimeField(default=datetime.now)
     #current_price = models.FloatField(default=0.0)                     #Repalsed by method
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+   
 
     @property
     def last_bid(self):
