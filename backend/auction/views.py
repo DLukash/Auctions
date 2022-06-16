@@ -34,7 +34,7 @@ class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
     filterset_class = AuctionFilter
 
     # TODO Change CREATE method store current user as an author
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     permission_classes_per_method = {
         "destroy": [IsAuthenticated&IsAuthor&IsAuthenticated],

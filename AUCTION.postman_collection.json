@@ -123,8 +123,34 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n        \"cadnumber\": \"0000000000:00:000:0000\",\r\n        \"size\": 2.0,\r\n        \"duration\": 2,\r\n        \"region\": 1\r\n    }"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/C:/Users/dmitr/Pictures/BI.png"
+								},
+								{
+									"key": "cadnumber",
+									"value": "0000000000:00:000:0000",
+									"type": "text"
+								},
+								{
+									"key": "size",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "region",
+									"value": "1",
+									"type": "text"
+								}
+							]
 						},
 						"url": {
 							"raw": "http://localhost:80/auction/",
@@ -458,6 +484,14 @@
 								""
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
