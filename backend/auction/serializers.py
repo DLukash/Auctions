@@ -11,6 +11,7 @@ class AuctionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Auction
         fields = '__all__'
+        # exclude = ['duration_timedelta']
         extra_kwargs = {'author': {'required': False}} 
 
     def get_current_price(self, obj):

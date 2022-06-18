@@ -14,8 +14,8 @@ services:
       options:
           max-file: "5"
           max-size: "10m"
-    # ports:
-    #   - 5433:${DB_PORT}
+    ports:
+      - 5433:${DB_PORT}
     volumes:
       - ./volumes/postgresql:/var/lib/postgresql/data
     env_file: .envdev

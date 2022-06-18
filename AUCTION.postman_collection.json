@@ -143,7 +143,7 @@
 								},
 								{
 									"key": "duration",
-									"value": "1",
+									"value": "12",
 									"type": "text"
 								},
 								{
@@ -222,6 +222,26 @@
 							"path": [
 								"auction",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Audit (close outdated auctions)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:80/auction/audit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"auction",
+								"audit"
 							]
 						}
 					},
