@@ -1,4 +1,5 @@
 FROM python:3.8.3 as base
+WORKDIR /app
 
 #RUN apt-get update -y
 #RUN apt-get upgrade -y
@@ -7,13 +8,11 @@ FROM python:3.8.3 as base
 
 
 FROM base as dev
-WORKDIR /app
 COPY ./requirements.txt ./
 RUN pip install -r requirements.txt
 
 
 FROM base as prod
-WORKDIR /app
 COPY ./ ./
 RUN pip install -r requirements.txt
 
