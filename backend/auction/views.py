@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters import rest_framework as filters
+from rest_framework.filters import OrderingFilter
 from django.db.models import Max, ExpressionWrapper, fields, F, Avg, Sum
 
 #Models
@@ -35,8 +36,9 @@ class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
     
     serializer_class = AuctionSerializer
     queryset = Auction.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (filters.DjangoFilterBackend, OrderingFilter)
     filterset_class = AuctionFilter
+    ordering_fields = ['size', 'region__name']
 
     permission_classes = [IsAuthenticated]
 
@@ -56,7 +58,10 @@ class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
         query_set = super().get_queryset()
 
         """
-        Implementing additional filtering depends on the last bid
+        Implementing:
+        - additional filtering depends on the last bid
+        - additional ordering based on price
+
         """
 
         if 'min_price' in self.request.GET:
@@ -64,7 +69,13 @@ class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
 
         if 'max_price' in self.request.GET:
             query_set = query_set.annotate(c_price=Max('bid__price')).filter(c_price__lt = self.request.GET['max_price'])
-       
+
+        if 'ordering' in self.request.GET:
+            if '-price' in self.request.GET['ordering'].split(','):
+                query_set = query_set.annotate(c_price=Max('bid__price')).order_by('-c_price')
+            if 'price' in self.request.GET['ordering'].split(','):
+                query_set = query_set.annotate(c_price=Max('bid__price')).order_by('c_price')
+
         return query_set
 
 
