@@ -6,8 +6,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 #Views
-from auction.views import RegionViewSet, AuctionViewSet, BidViewSet, AuctionAudit
-
+from auction.views import RegionViewSet, AuctionViewSet, BidViewSet, AuctionAuditView, StatisticView
 
 
 #Auctions
@@ -17,7 +16,8 @@ urlpatterns = [
     path('auction/<int:pk>', AuctionViewSet.as_view({'get':'retrieve', 
                                                 'patch':'partial_update', 
                                                 'delete':'destroy'})),
-    path('auction/audit', AuctionAudit.as_view())  
+    path('auction/audit', AuctionAuditView.as_view()),
+    path('auction/statistic', StatisticView.as_view()),
 ]
 
 #Regions
@@ -35,6 +35,5 @@ urlpatterns +=[
 
 #Staticfiles & mediafiles
 if settings.DEBUG:
-
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
