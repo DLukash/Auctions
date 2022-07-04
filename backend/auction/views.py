@@ -1,9 +1,13 @@
+from datetime import datetime, timedelta, timezone
 
 #Django & DRF
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import status
 from django_filters import rest_framework as filters
-from django.db.models import Max
+from django.db.models import Max, ExpressionWrapper, fields, F
 
 #Models
 from auction.models import Auction, Region, Bid
@@ -15,7 +19,8 @@ from auction.serializers import AuctionSerializer, RegionSerializer, BidSerializ
 from auction.permitions import IsAuthor, PermissionPolicyMixin, LessThenFiveMinPass
 
 #Custom filter
-from auction.filters import AuctionFilter
+from auction.filters import AuctionFilter, BidFilter
+
 
 
 class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
@@ -33,7 +38,6 @@ class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = AuctionFilter
 
-    # TODO Change CREATE method store current user as an author
     permission_classes = [IsAuthenticated]
 
     permission_classes_per_method = {
@@ -46,8 +50,7 @@ class AuctionViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
         Overwrited method
         Store authorised user as an author of the auction
         """
-        serializer.save(author = self.request.user)
-    
+        serializer.save(author = self.request.user, duration_timedelta = timedelta(hours=serializer.validated_data['duration']))
     
     def get_queryset(self):
         query_set = super().get_queryset()
@@ -85,6 +88,8 @@ class BidViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
     
     serializer_class = BidSerializer
     queryset = Bid.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = BidFilter
 
     permission_classes = [IsAuthenticated]
 
@@ -99,4 +104,26 @@ class BidViewSet(PermissionPolicyMixin, viewsets.ModelViewSet):
         Store authorised user as an author of the auction
         """
         serializer.save(author = self.request.user)
+
+
+class AuctionAudit(APIView):
+    """
+    To GET itterate over all open auction (closed = False) and check if it is run of time.
+    If so -> make close = True.
+    Return number of closed and remaining auctions.
+    """
+    
+    def get(self, request):
+
+        """
+        Retrieve all outdated auctions (start_date+duration_timedelta < now)
+        Set "closed" to all quaryset
+        """
+
+        duration = ExpressionWrapper(F('start_date') + F('duration_timedelta'), 
+                                output_field=fields.DateTimeField())
+        auctions = Auction.objects.annotate(finish = duration).filter(finish__lt =  datetime.now(timezone.utc))
+        auctions.update(closed = True)
+
+        return Response(data={"closed":len(auctions)}, status= status.HTTP_200_OK)
 

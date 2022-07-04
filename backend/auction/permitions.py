@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from rest_framework import permissions
 from auction.models import Bid
 
@@ -10,7 +10,7 @@ class IsAuthor(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        print('Check permitions data')
+
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.author == request.user
@@ -40,7 +40,8 @@ class LessThenFiveMinPass(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS or not isinstance(obj, Bid):
             return True
         
-        return (datetime.now() - obj.bid_time) < 300
+        time_diff = timedelta(minutes=5)
+        return (datetime.now(timezone.utc) - obj.bid_time) < time_diff
 
 
 class PermissionPolicyMixin:

@@ -1,6 +1,8 @@
+
 from django_filters import rest_framework as filters
 
-from auction.models import Region, Auction
+from auction.models import Region, Auction, Bid
+
 
 class AuctionFilter(filters.FilterSet):
     """
@@ -13,3 +15,14 @@ class AuctionFilter(filters.FilterSet):
     class Meta:
         model=Auction
         fields=['region', 'min_size', 'max_size']
+
+class BidFilter(filters.FilterSet):
+    """
+    Filter depends on auction
+    """
+    auction = filters.ModelChoiceFilter(queryset=Auction.objects.all())
+
+
+    class Meta:
+        model=Bid
+        fields=['auction']

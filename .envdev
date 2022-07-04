@@ -1,0 +1,12 @@
+POSTGRES_USER=auction
+POSTGRES_PASSWORD=auction
+POSTGRES_DB=auction_db
+DB_HOST=postgres
+DB_PORT=5432
+SECRET_KEY='django-insecure-@mgpeb(_x&w_v!mlbr3m$kcyg%l_=al%$!0bs(+m#$k6j_3ym-'
+FILE_STORAGE=local
+AWS_S3_ACCESS_KEY_ID=''
+AWS_S3_SECRET_ACCESS_KEY=''
+DEBUG=True
+APP_PORT=8000
+SERVER_PORT=80

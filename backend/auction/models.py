@@ -1,4 +1,5 @@
-from datetime import datetime
+
+from datetime import datetime, timedelta, timezone
 
 #Django & DRF imports
 from django.db import models
@@ -54,7 +55,6 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 
-
 class Region(models.Model):
     """ ORM model to hold regions """
 
@@ -70,10 +70,14 @@ class Auction(models.Model):
             message='The cadaster number should be in 0000000000:00:000:0000 format'
         )])
     size = models.FloatField()
+    duration_timedelta = models.DurationField(default=timedelta(hours=1))
     duration = models.IntegerField(validators=[MinValueValidator(1)])
+    start_date = models.DateTimeField(default=datetime.now)
     #current_price = models.FloatField(default=0.0)                     #Repalsed by method
+    closed = models.BooleanField(default=False)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+   
 
     @property
     def last_bid(self):
@@ -122,6 +126,9 @@ class Bid(models.Model):
         if self.previous_bid:
             if self.previous_bid.author == self.author:
                 raise ValidationError ("The same author can't make two bids in a row")
+
+        if self.auction.start_date + self.auction.duration_timedelta > datetime.now(timezone.utc):
+            raise ValidationError ("Auction is run out of time")
 
         return super().clean()
 
