@@ -43,7 +43,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     """ 
     Custom ORM model for user
-    Username omited
+    Username omitted
     E-mail uses as username instead
     """
 
@@ -73,7 +73,7 @@ class Auction(models.Model):
     duration_timedelta = models.DurationField(default=timedelta(hours=1))
     duration = models.IntegerField(validators=[MinValueValidator(1)])
     start_date = models.DateTimeField(default=datetime.now)
-    #current_price = models.FloatField(default=0.0)                     #Repalsed by method
+    #current_price = models.FloatField(default=0.0)                     #Replaced by method
     closed = models.BooleanField(default=False)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -82,7 +82,7 @@ class Auction(models.Model):
     @property
     def last_bid(self):
         """
-        Return the last bid acording to bid_time.
+        Return the last bid according to bid_time.
         Return None if there is no such bid
         """
         if self.bid_set.exists():
@@ -93,7 +93,7 @@ class Auction(models.Model):
     @property
     def current_price(self):
         """
-        Return the last price acording to bid was made
+        Return the last price according to bid was made
         Return 0.0 if there are no bids at all
         """
         if self.bid_set.exists():
@@ -105,7 +105,7 @@ class Auction(models.Model):
 class Bid(models.Model):
     """ ORM model to hold bids"""
 
-    #previous_bid = models.ForeignKey('self', on_delete=models.DO_NOTHING) # Repalsed by method
+    #previous_bid = models.ForeignKey('self', on_delete=models.DO_NOTHING) # Replaced by method
     previous_bid = models.OneToOneField('self', on_delete=models.DO_NOTHING, blank=True, null=True, primary_key=False)
     price = models.FloatField(validators=[MinValueValidator(0)])
     bid_time = models.DateTimeField(default=datetime.now, editable=False)
@@ -127,7 +127,7 @@ class Bid(models.Model):
             if self.previous_bid.author == self.author:
                 raise ValidationError ("The same author can't make two bids in a row")
 
-        if self.auction.start_date + self.auction.duration_timedelta > datetime.now(timezone.utc):
+        if self.auction.start_date + self.auction.duration_timedelta < datetime.now(timezone.utc):
             raise ValidationError ("Auction is run out of time")
 
         return super().clean()
@@ -135,8 +135,8 @@ class Bid(models.Model):
     
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None) -> None:
         """
-        Redefind to invoce madel.clean() method during every save 
-        to inforce some additional madel level validation
+        Redefine to invoke model.clean() method during every save 
+        to enforce some additional model level validation
         """
         self.clean()
         return super().save(force_insert, force_update, using, update_fields)
@@ -150,12 +150,6 @@ class Bid(models.Model):
         later_bid = self.auction.bid_set.filter(bid_time__gte = self.bid_time).order_by('bid_time').first()
         later_bid.previous_bid = self.previous_bid
         
-        # previous_bid = self.previous_bid
-        # for bid in later_bids:
-        #     bid.previous_bid = previous_bid
-        #     previous_bid = bid
-        #     bid.save()
-
         return super().delete(using, keep_parents)
 
     
