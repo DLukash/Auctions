@@ -12,12 +12,12 @@ from auction.views import RegionViewSet, AuctionViewSet, BidViewSet, AuctionAudi
 #Auctions
 urlpatterns = [
     path('auction/',AuctionViewSet.as_view({'get':'list',
-                                      'post':'create'})),
+                                      'post':'create'}), name = 'auction-list'),
     path('auction/<int:pk>', AuctionViewSet.as_view({'get':'retrieve', 
                                                 'patch':'partial_update', 
-                                                'delete':'destroy'})),
-    path('auction/audit', AuctionAuditView.as_view()),
-    path('auction/statistic', StatisticView.as_view()),
+                                                'delete':'destroy'}), name = 'auction-detail'),
+    path('auction/audit', AuctionAuditView.as_view(), name = 'auction-audit'),
+    path('auction/statistic', StatisticView.as_view(), name = 'auction-statistics'),
 ]
 
 #Regions
@@ -28,9 +28,9 @@ urlpatterns += region_router.urls
 #Bids
 urlpatterns +=[
     path('bid/', BidViewSet.as_view({'get':'list',
-                                'post':'create'})),
+                                'post':'create'}), name = 'bid-list'),
     path('bid/<int:pk>', BidViewSet.as_view({'get':'retrieve', 
-                                        'delete':'destroy'}))
+                                        'delete':'destroy'}), name = 'bid-detail')
 ]
 
 #Staticfiles & mediafiles
