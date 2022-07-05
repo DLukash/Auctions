@@ -91,10 +91,9 @@ class AuctionTestCase(BaseTestCase):
 class BidTestCase(BaseTestCase):
     
     def setUp(self) -> None:
-        #Up to date Auction
         super().setUp()
 
-        #Normal auction
+        #Up to date auction
         Auction.objects.create(
             pk = 1001,
             cadnumber = "0000000000:00:000:0000",
