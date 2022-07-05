@@ -10,33 +10,6 @@
 			"name": "Auction",
 			"item": [
 				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:80/auction/6",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "80",
-							"path": [
-								"auction",
-								"6"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "3\\",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "List",
 					"request": {
 						"method": "GET",
@@ -82,6 +55,38 @@
 								{
 									"key": "max_price",
 									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "ordering",
+									"value": "-region__name",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:80/auction/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "80",
+							"path": [
+								"auction",
+								"6"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "3\\",
 									"disabled": true
 								}
 							]
@@ -129,7 +134,7 @@
 								{
 									"key": "photo",
 									"type": "file",
-									"src": "/C:/Users/dmitr/Pictures/1.png"
+									"src": "/C:/Users/dmitr/Pictures/c644b439274d5224ae52d63ea1b99351.jpg"
 								},
 								{
 									"key": "cadnumber",
@@ -143,7 +148,7 @@
 								},
 								{
 									"key": "duration",
-									"value": "12",
+									"value": "1",
 									"type": "text"
 								},
 								{
@@ -242,6 +247,25 @@
 							"path": [
 								"auction",
 								"audit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Statistic",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/auction/statistic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"auction",
+								"statistic"
 							]
 						}
 					},
@@ -363,16 +387,6 @@
 				{
 					"name": "Create Bid",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU0ODc2MzQxLCJqdGkiOiJkZDRkNGI0MGZlOTE0NzJkYjg5ZDk5YmU4YzBhMTAzNCIsInVzZXJfaWQiOjF9.ITQhT_Fm6KrpPjKKbWA56-xi0XfyKA0pDEvLMDwZ1aU",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [
 							{
@@ -383,7 +397,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"price\": 100,\r\n    \"bid_time\": \"2022-06-10T19:34\",\r\n    \"auction\": 1\r\n}"
+							"raw": "{\r\n    \"price\": 100,\r\n    \"auction\": 38\r\n}"
 						},
 						"url": {
 							"raw": "http://localhost:80/bid/",
@@ -555,6 +569,19 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -580,7 +607,7 @@
 					"  body: {",
 					"      mode: 'formdata',",
 					"      formdata: [",
-					"          { key: 'email', value: 'user1@user.com' },",
+					"          { key: 'email', value: 'user2@user.com' },",
 					"          { key: 'password', value: 'admin4321' }",
 					"      ]",
 					"  }",
