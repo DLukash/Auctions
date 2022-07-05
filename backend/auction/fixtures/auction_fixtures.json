@@ -1,0 +1,32 @@
+[
+    {
+        "model": "auction.auction",
+        "pk": 1,
+        "fields": {
+            "photo": "",
+            "cadnumber": "0000000000:000:00:0000",
+            "size": 2.0,
+            "duration_timedelta": "01:00:00",
+            "duration": 2,
+            "start_date": "2022-06-15T15:31:57.504Z",
+            "closed": false,
+            "region": 2,
+            "author": 1
+        }
+    },
+    {
+        "model": "auction.auction",
+        "pk": 2,
+        "fields": {
+            "photo": "",
+            "cadnumber": "0000000000:000:00:0000",
+            "size": 2.0,
+            "duration_timedelta": "01:00:00",
+            "duration": 2,
+            "start_date": "2022-06-15T15:31:57.504Z",
+            "closed": false,
+            "region": 1,
+            "author": 2
+        }
+    }
+]

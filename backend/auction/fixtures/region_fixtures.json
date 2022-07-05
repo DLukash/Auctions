@@ -1,0 +1,23 @@
+[
+    {
+        "model": "auction.region",
+        "pk": 1,
+        "fields": {
+            "name": "Region 1"
+        }
+    },
+    {
+        "model": "auction.region",
+        "pk": 2,
+        "fields": {
+            "name": "Region 2"
+        }
+    },
+    {
+        "model": "auction.region",
+        "pk": 3,
+        "fields": {
+            "name": "Region 3"
+        }
+    }
+]

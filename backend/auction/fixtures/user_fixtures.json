@@ -1,0 +1,38 @@
+[
+    {
+        "model": "auction.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$320000$Jf3NFYXT41nHnvM7tjsbZv$ImF49i1+cYhXCqdyNO2+NPS1wzb1sIATXY7YIKusVHk=",
+            "last_login": null,
+            "is_superuser": true,
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2022-06-10T15:21:05.418Z",
+            "email": "admin@admin.com",
+            "avatar": "",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auction.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$320000$oqsTDsHPDs1g3IcH4LWfyi$K8gtrsZET8G4t3A33oUzU6A5M6b8OhsZmnK+o2Qb76M=",
+            "last_login": null,
+            "is_superuser": false,
+            "first_name": "",
+            "last_name": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2022-06-10T15:52:50.852Z",
+            "email": "user1@user.com",
+            "avatar": "",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]
